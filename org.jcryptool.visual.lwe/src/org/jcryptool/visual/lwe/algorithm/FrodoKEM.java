@@ -4,9 +4,7 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 
 import org.bouncycastle.crypto.digests.SHAKEDigest;
-import org.bouncycastle.util.Strings;
 import org.bouncycastle.util.encoders.Hex;
-import org.eclipse.core.runtime.Assert;
 
 public class FrodoKEM {
 
@@ -15,9 +13,6 @@ public class FrodoKEM {
 
     private PublicKey pk;
     private SecretKey sk;
-
-    private short[][] CEncode;
-    private byte[] CDecode;
 
     private byte[] cypherText;
     private byte[] mu;
@@ -62,14 +57,11 @@ public class FrodoKEM {
         System.out.println("Auto-generated mu:\t" + Hex.toHexString(frodo.getMu()));
         System.out.println("Alices shared secret:\t" + Hex.toHexString(ss1));
         System.out.println("Bobs shared secret:\t" + Hex.toHexString(ss2)+"\n");
-        
-        // Arrays.asList(cypher).retainAll(Arrays.asList(decoded));
-        // assert(cypher.length == 0);
+       
     }
 
     public FrodoKEM(AlgorithmParameters params) {
         rand = new SecureRandom();
-        // create parameters according to Frodo640 spec
         this.params = params;
     }
 
@@ -130,7 +122,7 @@ public class FrodoKEM {
         byte[] seed = new byte[((params.no * params.nbar) * 2 + params.nbar * params.nbar) * params.lenX];
 
         short[][] Sp, Ep, Epp;
-        short[][] B, Bp, V, C;
+        short[][] B, Bp, V;
         byte[] G2in = new byte[params.bytesMU + params.cryptoBytes];
         byte[] G2out = new byte[2 * params.cryptoBytes];
         byte[] shakeInputSeedSE = new byte[1 + params.cryptoBytes];
@@ -165,7 +157,7 @@ public class FrodoKEM {
         V = multiplyAddMatrices(Sp, B, Epp);
 
         // Encode message, and compute C = V + enc(mu) (mod q)
-        CEncode = encode(mu);
+        short[][] CEncode = encode(mu);
 
         CEncode = add(CEncode, V);
 
@@ -276,10 +268,8 @@ public class FrodoKEM {
 
         for (i = 0; i < n1; i++) {
             for (j = 0; j < n2; j++) {
-                int sample = 0;
                 int index = (i * n2 + j) * 2;
                 R[i][j] = (short) sample(r[index] << 8 & 0xFF00 | r[index + 1] & 0xFF);
-
             }
         }
         return R;
@@ -310,7 +300,7 @@ public class FrodoKEM {
     private short[][] encode(byte[] m) {
         int i, j, k;
         short[][] out = new short[params.nbar][params.nbar];
-        long temp, mask = (1 << params.B) - 1;
+        long temp;
 
         for (i = 0; i < out.length; i++) {
             for (j = 0; j < out[i].length; j++) {
