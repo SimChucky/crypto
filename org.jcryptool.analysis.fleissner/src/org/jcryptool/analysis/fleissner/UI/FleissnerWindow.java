@@ -122,10 +122,8 @@ public class FleissnerWindow extends Composite{
     private String textName;
     private String statisticName;
     private String oldNgramSize = null;
-//    private FileInputStream fis;
-    private InputStream fis = null;
-//    private FileInputStream fisOld = null;
-    private InputStream fisOld = null;
+    private FileInputStream fis;
+    private FileInputStream fisOld = null;
     private LoadFiles lf = new LoadFiles();
 
 
