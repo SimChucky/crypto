@@ -12,15 +12,15 @@ public class AlgorithmParameters {
     public int no;
     /** a power-of-two integer modulus with exponent D ≤ 16 !! minus one for bit masking **/
     public int q; 
-    public int logQ;
+    public int D;
     public int stripeStep;
     public int nbar;
     /** the number of bits encoded in each matrix entry **/
-    public int extractedBits;
+    public int B;
     /** the byte length of seed used for pseudorandom pk-matrix generation **/
     public int lenSeedA; 
     /** a probability distribution on Z, rounded Gaussian distribution **/
-    public short[] CDF_TABLE; 
+    public int[] CDF_TABLE; 
     public int bytesMU;
     /** crypto bytes = size of pkHash **/
     public int cryptoBytes;
@@ -30,5 +30,6 @@ public class AlgorithmParameters {
     public int secretKeyBytes;
     /** (logQ * N * nbar)/8 + (loqQ * nbar * nbar)/8 **/
     public int cypherTextBytes;
+    public int lenX;
 
 }
